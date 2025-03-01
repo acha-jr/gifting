@@ -18,14 +18,21 @@ export default function GiftPage() {
 
   const handleConfirm = async () => {
     try {
-      const response = await fetch(`/api/gifts/${id}`, { // ✅ Corrected here
+      const response = await fetch(`/api/gifts/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sender: userId, recipient }),
       });
-
+      
+      if (!response.ok) {
+        const text = await response.text(); // Read the response as text
+        console.error("Server Response:", text); // Log the actual response (helps debug)
+        throw new Error("Failed to send gift");
+      }
+      
       const data = await response.json();
       console.log("API Response:", data);
+      alert("Gift sent successfully!");
 
       if (!response.ok) throw new Error(data.message || "Failed to send gift");
 
