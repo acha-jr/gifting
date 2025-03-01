@@ -9,7 +9,7 @@ const properties = [
 ];
 
 export default function GiftPage() {
-  const { id } = useParams();
+  const { id } = useParams(); // Extract ID from the URL
   const property = properties.find((p) => p.id === id);
 
   const [recipient, setRecipient] = useState("");
@@ -18,17 +18,17 @@ export default function GiftPage() {
 
   const handleConfirm = async () => {
     try {
-      const response = await fetch(`/api/gifts/${giftId}`, {
+      const response = await fetch(`/api/gifts/${id}`, { // ✅ Corrected here
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sender: userId, recipient, message }),
+        body: JSON.stringify({ sender: userId, recipient }),
       });
-  
+
       const data = await response.json();
       console.log("API Response:", data);
-  
+
       if (!response.ok) throw new Error(data.message || "Failed to send gift");
-  
+
       alert("Gift sent successfully!");
       setShowConfirmation(false);
     } catch (error) {
@@ -43,7 +43,7 @@ export default function GiftPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
       <div className="bg-white shadow-xl p-6 rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Gift {property.name}</h2>
-        
+
         {!showConfirmation ? (
           <>
             <img src={property.image} alt={property.name} className="w-full h-40 object-cover rounded-lg mb-4" />
